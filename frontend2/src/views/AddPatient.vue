@@ -51,6 +51,21 @@
         <span class="error-message" v-if="errors.ownerName">{{ errors.ownerName }}</span>
       </div>
 
+      <div class="form-group">
+        <label for="ownerContact">Owner Contact *</label>
+        <input 
+          id="ownerContact"
+          type="tel"
+          class="form-input"
+          v-model="formData.ownerContact"
+          required
+          placeholder="phone number 0(5)(6)(7)......."
+          :class="{ 'error-field': errors.ownerContact }"
+          @blur="validateField('ownerContact')"
+        >
+        <span class="error-message" v-if="errors.ownerContact">{{ errors.ownerContact }}</span>
+      </div>
+
       <div class="form-row">
         <div class="form-group">
           <label for="age">Age</label>
@@ -130,6 +145,16 @@
         ></textarea>
       </div>
 
+      <div class="form-group">
+        <label for="createdAt">Created At</label>
+        <input 
+          id="createdAt"
+          type="date"
+          v-model="formData.createdAt"
+          disabled
+        >
+      </div>
+
       <div class="form-actions">
         <button type="submit" class="submit-btn" :disabled="isSubmitting">
           <span v-if="isSubmitting">
@@ -177,6 +202,7 @@ const showSuccess = ref(false)
 const showError = ref(false)
 const errorMessage = ref('')
 const breedOptions = ref([])
+const API_URL = 'http://votre-backend-api.com/patients' // Remplacez par votre URL réelle
 
 const props = defineProps({
   patientToEdit: {
@@ -193,18 +219,21 @@ const isEditMode = computed(() => !!props.patientToEdit)
 const formData = reactive({
   petName: '',
   ownerName: '',
+  ownerContact: '',
   age: null,
   gender: '',
   birthDate: '',
   species: '',
   breed: '',
   medicalIssues: '',
+  createdAt: new Date().toISOString().split('T')[0],
   photo: null
 })
 
 const errors = reactive({
   petName: '',
   ownerName: '',
+  ownerContact: '',
   species: ''
 })
 
@@ -215,10 +244,14 @@ onMounted(() => {
   if (isEditMode.value) {
     formData.petName = props.patientToEdit.pet_name
     formData.ownerName = props.patientToEdit.owner_name
+    formData.ownerContact = props.patientToEdit.owner_contact || ''
     formData.age = props.patientToEdit.age
     formData.gender = props.patientToEdit.sex
     formData.species = props.patientToEdit.species
-    // Initialize other fields as needed
+    formData.breed = props.patientToEdit.breed || ''
+    formData.medicalIssues = props.patientToEdit.medical_issues || ''
+    formData.birthDate = props.patientToEdit.birth_date || ''
+    formData.createdAt = props.patientToEdit.created_at || new Date().toISOString().split('T')[0]
   }
 })
 
@@ -261,6 +294,11 @@ const validateField = (field) => {
     case 'ownerName':
       errors.ownerName = formData.ownerName.trim() ? '' : 'Owner name is required'
       break
+    case 'ownerContact':
+      errors.ownerContact = /^\+?[\d\s-]{8,}$/.test(formData.ownerContact) 
+        ? '' 
+        : 'Please enter a valid phone number'
+      break  
     case 'species':
       errors.species = formData.species ? '' : 'Please select a species'
       break
@@ -312,6 +350,8 @@ const showErrorNotification = (message) => {
   setTimeout(() => showError.value = false, 5000)
 }
 
+
+
 // Form submission
 const submitForm = async () => {
   if (!validateForm()) {
@@ -326,12 +366,14 @@ const submitForm = async () => {
       id: isEditMode.value ? props.patientToEdit.id : null,
       pet_name: formData.petName,
       owner_name: formData.ownerName,
+      owner_contact: formData.ownerContact,
       age: formData.age,
       sex: formData.gender,
       species: formData.species,
       breed: formData.breed,
       medical_issues: formData.medicalIssues,
       birth_date: formData.birthDate,
+      created_at: formData.createdAt,
       photo: formData.photo
     }
 
@@ -351,6 +393,8 @@ const submitForm = async () => {
   } finally {
     isSubmitting.value = false
   }
+
+  emit('save-patient', patientData)
 }
 
 const cancelEdit = () => {
@@ -647,5 +691,16 @@ const cancelEdit = () => {
   .form-actions {
     flex-direction: column;
   }
+
+}
+.form-input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: border 0.3s;
 }
 </style>

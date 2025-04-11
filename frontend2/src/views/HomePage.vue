@@ -18,7 +18,7 @@
       <div class="section-text">
         <h2>Because Happy pets make happy vets</h2>
         <p>Welcome to PettoVet! Easily add, update, and track patient records...</p>
-        <button class="btn2">Start now</button>
+        <router-link to="/addpatient" class="btn2">Start now</router-link>
       </div>
       <img src="@/assets/homepage-icon/doctor-home.png" alt="Vétérinaire avec animaux" class="section-image2" />
     </div>
