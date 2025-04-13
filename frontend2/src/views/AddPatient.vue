@@ -90,29 +90,34 @@
         >
       </div>
 
-      <div class="form-group">
-        <label for="species">Species *</label>
-        <select 
-          id="species" 
-          v-model="formData.species" 
-          required
-          :class="{ 'error-field': errors.species }"
-          @change="validateField('species')"
-        >
-          <option value="" disabled selected>Select species</option>
-          <option value="Dog">Dog</option>
-          <option value="Cat">Cat</option>
-          <option value="Bird">Bird</option>
-          <option value="Rabbit">Rabbit</option>
-          <option value="Other">Other</option>
-        </select>
-        <span class="error-message" v-if="errors.species">{{ errors.species }}</span>
-      </div>
+ <div class="form-group">
+  <label for="species">Species</label>
+  <input 
+    id="species"
+    list="species-options"
+    v-model="formData.species"
+    required
+    :class="{ 'error-field': errors.species }"
+    @change="validateField('species')"
+    placeholder="Select or enter species"
+  />
+  <datalist id="species-options">
+    <option value="Dog"></option>
+    <option value="Cat"></option>
+    <option value="Bird"></option>
+    <option value="Rabbit"></option>
+    <option value="Other"></option>
+  </datalist>
+  <span class="error-message" v-if="errors.species">{{ errors.species }}</span>
+</div>
+
+
+
 
       <div class="form-group">
         <label for="breed">Breed</label>
         <input 
-          id="breed"
+          id="Breed"
           type="text" 
           v-model="formData.breed" 
           placeholder="e.g. Golden Retriever"
@@ -124,7 +129,7 @@
       </div>
 
       <div class="form-group">
-        <label>Gender</label>
+        <label for="gender">Gender</label>
         <div class="gender-options">
           <label>
             <input type="radio" v-model="formData.gender" value="Male"> Male
@@ -133,6 +138,7 @@
             <input type="radio" v-model="formData.gender" value="Female"> Female
           </label>
         </div>
+        <span class="error-message" v-if="errors.gender">{{ errors.gender }}</span>
       </div>
 
       <div class="form-group">
@@ -145,15 +151,7 @@
         ></textarea>
       </div>
 
-      <div class="form-group">
-        <label for="createdAt">Created At</label>
-        <input 
-          id="createdAt"
-          type="date"
-          v-model="formData.createdAt"
-          disabled
-        >
-      </div>
+    
 
       <div class="form-actions">
         <button type="submit" class="submit-btn" :disabled="isSubmitting">
@@ -192,6 +190,7 @@
 </template>
 
 <script setup>
+import axios from 'axios'
 import { ref, reactive, watch, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -202,7 +201,7 @@ const showSuccess = ref(false)
 const showError = ref(false)
 const errorMessage = ref('')
 const breedOptions = ref([])
-const API_URL = 'http://votre-backend-api.com/patients' // Remplacez par votre URL réelle
+const API_URL = 'http://localhost:5000/patients'
 
 const props = defineProps({
   patientToEdit: {
@@ -215,7 +214,7 @@ const emit = defineEmits(['save-patient', 'cancel'])
 
 const isEditMode = computed(() => !!props.patientToEdit)
 
-// Form data structure
+// Form data structure - NOMS INTERNES RESTENT IDENTIQUES pour la liaison v-model
 const formData = reactive({
   petName: '',
   ownerName: '',
@@ -239,18 +238,18 @@ const errors = reactive({
 
 const previewImage = ref(null)
 
-// Initialize form with patient data if in edit mode
+// Initialisation du formulaire en mode édition
 onMounted(() => {
   if (isEditMode.value) {
-    formData.petName = props.patientToEdit.pet_name
-    formData.ownerName = props.patientToEdit.owner_name
+    formData.petName = props.patientToEdit.name // 'pet_name' devient 'name'
+    formData.ownerName = props.patientToEdit.ownername // 'owner_name' devient 'ownername'
     formData.ownerContact = props.patientToEdit.owner_contact || ''
     formData.age = props.patientToEdit.age
     formData.gender = props.patientToEdit.sex
     formData.species = props.patientToEdit.species
-    formData.breed = props.patientToEdit.breed || ''
-    formData.medicalIssues = props.patientToEdit.medical_issues || ''
-    formData.birthDate = props.patientToEdit.birth_date || ''
+    formData.breed = props.patientToEdit.race || '' // 'breed' devient 'race'
+    formData.medicalIssues = props.patientToEdit.medical_issue || '' // 'medicalIssues' devient 'medical_issue'
+    formData.birthDate = props.patientToEdit.birthday_ownerday || '' // 'birthDate' devient 'birthday_ownerday'
     formData.createdAt = props.patientToEdit.created_at || new Date().toISOString().split('T')[0]
   }
 })
@@ -302,6 +301,9 @@ const validateField = (field) => {
     case 'species':
       errors.species = formData.species ? '' : 'Please select a species'
       break
+      case 'gender':
+      errors.gender = formData.gender ? '' : 'Please select a gender'
+      break
   }
 }
 
@@ -309,7 +311,9 @@ const validateForm = () => {
   validateField('petName')
   validateField('ownerName')
   validateField('species')
-  return !errors.petName && !errors.ownerName && !errors.species
+  validateField('ownerContact')
+  validateField('gender')
+  return !errors.petName && !errors.ownerName && !errors.species && !errors.ownerContact && !errors.gender
 }
 
 // Calculate age from birth date
@@ -353,50 +357,47 @@ const showErrorNotification = (message) => {
 
 
 // Form submission
+// Dans la méthode submitForm, remplacez tout par :
 const submitForm = async () => {
-  if (!validateForm()) {
-    showErrorNotification("Please correct the form errors")
-    return
-  }
-
-  isSubmitting.value = true
-
   try {
-    const patientData = {
-      id: isEditMode.value ? props.patientToEdit.id : null,
-      pet_name: formData.petName,
-      owner_name: formData.ownerName,
-      owner_contact: formData.ownerContact,
-      age: formData.age,
-      sex: formData.gender,
-      species: formData.species,
-      breed: formData.breed,
-      medical_issues: formData.medicalIssues,
-      birth_date: formData.birthDate,
-      created_at: formData.createdAt,
-      photo: formData.photo
+    // 1. Créer FormData au lieu de JSON
+    const formPayload = new FormData();
+    
+    // Ajouter tous les champs texte
+    formPayload.append('name', formData.petName);
+    formPayload.append('ownername', formData.ownerName);
+    formPayload.append('owner_contact', formData.ownerContact);
+    formPayload.append('species', formData.species);
+    formPayload.append('sex', formData.gender);
+    formPayload.append('age', formData.age || '');
+    formPayload.append('race', formData.breed || '');
+    formPayload.append('medical_issue', formData.medicalIssues || '');
+    formPayload.append('birthday_ownerday', formData.birthDate || '');
+
+    // 2. Ajouter la photo si elle existe
+    if (formData.photo) {
+      formPayload.append('photo', formData.photo); // 'photo' doit matcher avec multer
     }
 
-    if (isEditMode.value) {
-      emit('save-patient', patientData)
-      showSuccessNotification()
-    } else {
-      // Ici vous ajouterez votre logique pour créer un nouveau patient
-      // Par exemple :
-      // await createPatient(patientData)
-      showSuccessNotification()
-      setTimeout(() => router.push('/patientlist'), 1500)
+    // 3. Envoyer en une seule requête
+    const response = await axios.post(`${API_URL}/add`, formPayload, {
+      // Pas besoin de Content-Type header, axios le gère automatiquement pour FormData
+    });
+
+    if (response.data.success) {
+      showSuccessNotification();
     }
+
   } catch (error) {
-    console.error('Error:', error)
-    showErrorNotification(error.message || 'An error occurred')
-  } finally {
-    isSubmitting.value = false
+    console.error("Détails de l'erreur:", {
+      URL: error.config?.url,
+      Status: error.response?.status,
+      Data: error.response?.data,
+      Headers: error.config?.headers
+    });
+    showErrorNotification(error.response?.data?.message || "Erreur lors de l'envoi");
   }
-
-  emit('save-patient', patientData)
-}
-
+};
 const cancelEdit = () => {
   emit('cancel')
 }
@@ -694,6 +695,7 @@ const cancelEdit = () => {
 
 }
 .form-input,
+.form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;

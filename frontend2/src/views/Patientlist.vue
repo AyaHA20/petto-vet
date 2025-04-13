@@ -1,7 +1,12 @@
 <template>
   <div class="patient-list-container">
-    <h2>Patient List</h2>
-    
+   <h2 style="text-align: center;">
+  <span style="display: inline-flex; align-items: center; gap: 10px;">
+    Patient List
+    <img src="/src/assets/img/salta3.gif" alt="PettoVet Logo" style="height: 2em;">
+  </span>
+</h2>
+      
     <div class="controls">
       <div class="sort-buttons">
         <h3>Sorted by:</h3>
@@ -67,6 +72,7 @@
       </div>
     </div>
   </div>
+ 
 </template>
 
 <script>
@@ -153,6 +159,7 @@ export default {
       this.hideEditForm();
     }
   }
+  
 };
 </script>
 
@@ -369,5 +376,23 @@ tbody tr:hover {
     width: 95%;
     padding: 15px;
   }
+}
+.title-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.centered-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.title-image img {
+  height: 1em; /* Taille relative à la police */
+  width: auto;
+  vertical-align: middle;
 }
 </style>
