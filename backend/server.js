@@ -6,6 +6,15 @@ const app = express();
 const patientRoutes = require("./routes/patientRoutes"); // Importer les routes
 
 // Middleware
+// Ajoutez ce middleware avant express.json()
+app.use((req, res, next) => {
+  if (req.method === 'DELETE') {
+    req.body = {};
+    return next();
+  }
+  next();
+});
+app.use(express.json());
 app.use(express.json());
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
@@ -14,6 +23,7 @@ app.use("/uploads", express.static("uploads"));
 const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
+  port:3306,
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME,
 });
@@ -21,8 +31,8 @@ const db = mysql.createPool({
 console.log("DB_USER:", process.env.DB_USER);
 console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
 console.log("PORT:", process.env.PORT);
-console.log("DB_HOST:", process.env.DB_HOST);  // Doit afficher "localhost"
-// Test de la connexion à la base de données
+console.log("DB_HOST:", process.env.DB_HOST);  //  pour localhost
+//   test de connexion a la base
 db.getConnection()
   .then(() => {
     console.log("✅ Connecté à MySQL !");
@@ -32,21 +42,21 @@ db.getConnection()
   });
 
 
-  // Add this before your routes
+ 
 app.use((req, res, next) => {
-  req.db = db; // Attach db to request
+  req.db = db; 
   next();
 });
-// Utiliser les routes définies dans le fichier patientRoutes.js
-app.use("/patients", patientRoutes);  // Toutes les routes liées aux patients
+ 
+app.use("/patients", patientRoutes);  //  patients(racine route)
 
 // Lancer le serveur
 app.listen(process.env.PORT, () => {
   console.log(`🚀 Serveur démarré sur le port ${process.env.PORT}`);
 });
-// Route pour la racine
+ 
 app.get("/", (req, res) => {
   res.send("Bienvenue sur l'API de PettoVet !");
 });
 
-module.exports.db = db; // Add this at the end
+module.exports.db = db;  

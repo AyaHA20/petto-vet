@@ -3,21 +3,39 @@
     <!-- Header Section -->
     <div class="form-header">
       <div class="photo-upload" @click="triggerFileInput">
-        <img v-if="!previewImage" src="@/assets/AddPatient/addphoto.png" alt="Add Photo" class="upload-icon">
-        <img v-else :src="previewImage" alt="Patient Photo" class="patient-photo">
-        <input 
-          type="file" 
-          ref="fileInput" 
-          @change="handleFileUpload" 
-          accept="image/*" 
+        <img
+          v-if="!previewImage"
+          src="@/assets/AddPatient/addphoto.png"
+          alt="Add Photo"
+          class="upload-icon"
+        />
+        <img
+          v-else
+          :src="previewImage"
+          alt="Patient Photo"
+          class="patient-photo"
+        />
+        <input
+          type="file"
+          ref="fileInput"
+          @change="handleFileUpload"
+          accept="image/*"
           hidden
-        >
+        />
       </div>
       <div class="header-text">
-        <h2>{{ isEditMode ? 'Edit Patient' : 'Add Patient' }}</h2>
-        <p>Fill in the details below to {{ isEditMode ? 'update' : 'add a new' }} patient and keep their care on track</p>
+        <h2>{{ isEditMode ? "Edit Patient" : "Add Patient" }}</h2>
+        <p>
+          Fill in the details below to
+          {{ isEditMode ? "update" : "add a new" }} patient and keep their care
+          on track
+        </p>
       </div>
-      <img src="@/assets/AddPatient/tortue.gif" alt="Turtle" class="turtle-icon">
+      <img
+        src="@/assets/AddPatient/tortue.gif"
+        alt="Turtle"
+        class="turtle-icon"
+      />
     </div>
 
     <!-- Patient Form -->
@@ -25,35 +43,39 @@
       <!-- Pet Information -->
       <div class="form-group">
         <label for="petName">Pet Name *</label>
-        <input 
+        <input
           id="petName"
-          type="text" 
-          v-model="formData.petName" 
+          type="text"
+          v-model="formData.petName"
           required
           placeholder="e.g. Max"
           :class="{ 'error-field': errors.petName }"
           @blur="validateField('petName')"
-        >
-        <span class="error-message" v-if="errors.petName">{{ errors.petName }}</span>
+        />
+        <span class="error-message" v-if="errors.petName">{{
+          errors.petName
+        }}</span>
       </div>
 
       <div class="form-group">
         <label for="ownerName">Owner Name *</label>
-        <input 
+        <input
           id="ownerName"
-          type="text" 
-          v-model="formData.ownerName" 
+          type="text"
+          v-model="formData.ownerName"
           required
           placeholder="Owner's full name"
           :class="{ 'error-field': errors.ownerName }"
           @blur="validateField('ownerName')"
-        >
-        <span class="error-message" v-if="errors.ownerName">{{ errors.ownerName }}</span>
+        />
+        <span class="error-message" v-if="errors.ownerName">{{
+          errors.ownerName
+        }}</span>
       </div>
 
       <div class="form-group">
         <label for="ownerContact">Owner Contact *</label>
-        <input 
+        <input
           id="ownerContact"
           type="tel"
           class="form-input"
@@ -62,69 +84,74 @@
           placeholder="phone number 0(5)(6)(7)......."
           :class="{ 'error-field': errors.ownerContact }"
           @blur="validateField('ownerContact')"
-        >
-        <span class="error-message" v-if="errors.ownerContact">{{ errors.ownerContact }}</span>
+        />
+        <span class="error-message" v-if="errors.ownerContact">{{
+          errors.ownerContact
+        }}</span>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label for="age">Age</label>
-          <input 
+          <input
             id="age"
-            type="number" 
-            v-model="formData.age" 
+            type="number"
+            v-model="formData.age"
             min="0"
             placeholder="0"
-          >
+          />
           <span class="input-unit">years</span>
         </div>
       </div>
 
       <div class="form-group">
         <label for="birthDate">Birthday/Adoption Date</label>
-        <input 
+        <input
           id="birthDate"
-          type="date" 
+          type="date"
           v-model="formData.birthDate"
           @change="calculateAgeFromDate"
-        >
+        />
       </div>
 
- <div class="form-group">
-  <label for="species">Species</label>
-  <input 
-    id="species"
-    list="species-options"
-    v-model="formData.species"
-    required
-    :class="{ 'error-field': errors.species }"
-    @change="validateField('species')"
-    placeholder="Select or enter species"
-  />
-  <datalist id="species-options">
-    <option value="Dog"></option>
-    <option value="Cat"></option>
-    <option value="Bird"></option>
-    <option value="Rabbit"></option>
-    <option value="Other"></option>
-  </datalist>
-  <span class="error-message" v-if="errors.species">{{ errors.species }}</span>
-</div>
-
-
-
+      <div class="form-group">
+        <label for="species">Species</label>
+        <input
+          id="species"
+          list="species-options"
+          v-model="formData.species"
+          required
+          :class="{ 'error-field': errors.species }"
+          @change="validateField('species')"
+          placeholder="Select or enter species"
+        />
+        <datalist id="species-options">
+          <option value="Dog"></option>
+          <option value="Cat"></option>
+          <option value="Bird"></option>
+          <option value="Rabbit"></option>
+          <option value="Other"></option>
+        </datalist>
+        <span class="error-message" v-if="errors.species">{{
+          errors.species
+        }}</span>
+      </div>
 
       <div class="form-group">
         <label for="breed">Breed</label>
-        <input 
+        <input
           id="Breed"
-          type="text" 
-          v-model="formData.breed" 
+          type="text"
+          v-model="formData.breed"
           placeholder="e.g. Golden Retriever"
           list="breedOptions"
-        >
+        />
         <datalist id="breedOptions">
-          <option v-for="breed in breedOptions" :key="breed" :value="breed"></option>
+          <option
+            v-for="breed in breedOptions"
+            :key="breed"
+            :value="breed"
+          ></option>
         </datalist>
       </div>
 
@@ -132,41 +159,49 @@
         <label for="gender">Gender</label>
         <div class="gender-options">
           <label>
-            <input type="radio" v-model="formData.gender" value="Male"> Male
+            <input type="radio" v-model="formData.gender" value="Male" /> Male
           </label>
           <label>
-            <input type="radio" v-model="formData.gender" value="Female"> Female
+            <input type="radio" v-model="formData.gender" value="Female" />
+            Female
           </label>
         </div>
-        <span class="error-message" v-if="errors.gender">{{ errors.gender }}</span>
+        <span class="error-message" v-if="errors.gender">{{
+          errors.gender
+        }}</span>
       </div>
 
       <div class="form-group">
         <label for="medicalIssues">Medical Issues</label>
-        <textarea 
+        <textarea
           id="medicalIssues"
-          v-model="formData.medicalIssues" 
+          v-model="formData.medicalIssues"
           placeholder="Any known health problems or allergies"
           rows="3"
         ></textarea>
       </div>
 
-    
-
       <div class="form-actions">
         <button type="submit" class="submit-btn" :disabled="isSubmitting">
           <span v-if="isSubmitting">
             <svg class="spinner" viewBox="0 0 50 50">
-              <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+              <circle
+                class="path"
+                cx="25"
+                cy="25"
+                r="20"
+                fill="none"
+                stroke-width="5"
+              ></circle>
             </svg>
             Saving...
           </span>
-          <span v-else>{{ isEditMode ? 'Save Changes' : 'Add Patient' }}</span>
+          <span v-else>{{ isEditMode ? "Save Changes" : "Add Patient" }}</span>
         </button>
-        
-        <button 
-          v-if="isEditMode" 
-          @click="cancelEdit" 
+
+        <button
+          v-if="isEditMode"
+          @click="cancelEdit"
           type="button"
           class="cancel-btn"
         >
@@ -177,7 +212,11 @@
 
     <!-- Success Notification -->
     <div v-if="showSuccess" class="notification success">
-      {{ isEditMode ? 'Patient updated successfully!' : 'Patient added successfully!' }}
+      {{
+        isEditMode
+          ? "Patient updated successfully!"
+          : "Patient added successfully!"
+      }}
       <button @click="showSuccess = false" class="close-notification">×</button>
     </div>
 
@@ -190,217 +229,292 @@
 </template>
 
 <script setup>
-import axios from 'axios'
-import { ref, reactive, watch, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import axios from "axios";
+import { ref, reactive, watch, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
-const fileInput = ref(null)
-const isSubmitting = ref(false)
-const showSuccess = ref(false)
-const showError = ref(false)
-const errorMessage = ref('')
-const breedOptions = ref([])
-const API_URL = 'http://localhost:5000/patients'
+const router = useRouter();
+const fileInput = ref(null);
+const isSubmitting = ref(false);
+const showSuccess = ref(false);
+const showError = ref(false);
+const errorMessage = ref("");
+const breedOptions = ref([]);
+const API_URL = "http://localhost:5000/patients";
 
 const props = defineProps({
   patientToEdit: {
     type: Object,
-    default: null
-  }
-})
+    default: null,
+  },
+});
 
-const emit = defineEmits(['save-patient', 'cancel'])
+const emit = defineEmits(["save-patient", "cancel"]);
 
-const isEditMode = computed(() => !!props.patientToEdit)
+const isEditMode = computed(() => !!props.patientToEdit);
 
 // Form data structure - NOMS INTERNES RESTENT IDENTIQUES pour la liaison v-model
 const formData = reactive({
-  petName: '',
-  ownerName: '',
-  ownerContact: '',
+  petName: "",
+  ownerName: "",
+  ownerContact: "",
   age: null,
-  gender: '',
-  birthDate: '',
-  species: '',
-  breed: '',
-  medicalIssues: '',
-  createdAt: new Date().toISOString().split('T')[0],
-  photo: null
-})
+  gender: "",
+  birthDate: "",
+  species: "",
+  breed: "",
+  medicalIssues: "",
+  createdAt: new Date().toISOString().split("T")[0],
+  photo: null,
+});
 
 const errors = reactive({
-  petName: '',
-  ownerName: '',
-  ownerContact: '',
-  species: ''
-})
+  petName: "",
+  ownerName: "",
+  ownerContact: "",
+  species: "",
+});
 
-const previewImage = ref(null)
+const previewImage = ref(null);
 
 // Initialisation du formulaire en mode édition
 onMounted(() => {
   if (isEditMode.value) {
-    formData.petName = props.patientToEdit.name // 'pet_name' devient 'name'
-    formData.ownerName = props.patientToEdit.ownername // 'owner_name' devient 'ownername'
-    formData.ownerContact = props.patientToEdit.owner_contact || ''
-    formData.age = props.patientToEdit.age
-    formData.gender = props.patientToEdit.sex
-    formData.species = props.patientToEdit.species
-    formData.breed = props.patientToEdit.race || '' // 'breed' devient 'race'
-    formData.medicalIssues = props.patientToEdit.medical_issue || '' // 'medicalIssues' devient 'medical_issue'
-    formData.birthDate = props.patientToEdit.birthday_ownerday || '' // 'birthDate' devient 'birthday_ownerday'
-    formData.createdAt = props.patientToEdit.created_at || new Date().toISOString().split('T')[0]
+    formData.petName = props.patientToEdit.name; // 'pet_name' devient 'name'
+    formData.ownerName = props.patientToEdit.ownername; // 'owner_name' devient 'ownername'
+    formData.ownerContact = props.patientToEdit.owner_contact || "";
+    formData.age = props.patientToEdit.age;
+    formData.gender = props.patientToEdit.sex;
+    formData.species = props.patientToEdit.species;
+    formData.breed = props.patientToEdit.race || ""; // 'breed' devient 'race'
+    formData.medicalIssues = props.patientToEdit.medical_issue || ""; // 'medicalIssues' devient 'medical_issue'
+    formData.birthDate = props.patientToEdit.birthday_ownerday || ""; // 'birthDate' devient 'birthday_ownerday'
+    formData.createdAt =
+      props.patientToEdit.created_at || new Date().toISOString().split("T")[0];
   }
-})
+});
 
 // Watch species change to load breeds
-watch(() => formData.species, (species) => {
-  if (species) {
-    loadBreeds(species)
+watch(
+  () => formData.species,
+  (species) => {
+    if (species) {
+      loadBreeds(species);
+    }
   }
-})
+);
 
 // Handle photo upload
 const triggerFileInput = () => {
-  fileInput.value.click()
-}
+  fileInput.value.click();
+};
 
 const handleFileUpload = (e) => {
-  const file = e.target.files[0]
-  if (!file) return
+  const file = e.target.files[0];
+  if (!file) return;
 
-  if (!file.type.match('image.*')) {
-    showErrorNotification('Please select an image file (JPEG, PNG)')
-    return
+  if (!file.type.match("image.*")) {
+    showErrorNotification("Please select an image file (JPEG, PNG)");
+    return;
   }
 
   if (file.size > 2 * 1024 * 1024) {
-    showErrorNotification('Image size should be less than 2MB')
-    return
+    showErrorNotification("Image size should be less than 2MB");
+    return;
   }
 
-  formData.photo = file
-  previewImage.value = URL.createObjectURL(file)
-}
+  formData.photo = file;
+  previewImage.value = URL.createObjectURL(file);
+};
 
 // Form validation
 const validateField = (field) => {
   switch (field) {
-    case 'petName':
-      errors.petName = formData.petName.trim() ? '' : 'Pet name is required'
-      break
-    case 'ownerName':
-      errors.ownerName = formData.ownerName.trim() ? '' : 'Owner name is required'
-      break
-    case 'ownerContact':
-      errors.ownerContact = /^\+?[\d\s-]{8,}$/.test(formData.ownerContact) 
-        ? '' 
-        : 'Please enter a valid phone number'
-      break  
-    case 'species':
-      errors.species = formData.species ? '' : 'Please select a species'
-      break
-      case 'gender':
-      errors.gender = formData.gender ? '' : 'Please select a gender'
-      break
+    case "petName":
+      errors.petName = formData.petName.trim() ? "" : "Pet name is required";
+      break;
+    case "ownerName":
+      errors.ownerName = formData.ownerName.trim()
+        ? ""
+        : "Owner name is required";
+      break;
+    case "ownerContact":
+      errors.ownerContact = /^\+?[\d\s-]{8,}$/.test(formData.ownerContact)
+        ? ""
+        : "Please enter a valid phone number";
+      break;
+    case "species":
+      errors.species = formData.species ? "" : "Please select a species";
+      break;
+    case "gender":
+      errors.gender = formData.gender ? "" : "Please select a gender";
+      break;
   }
-}
+};
 
 const validateForm = () => {
-  validateField('petName')
-  validateField('ownerName')
-  validateField('species')
-  validateField('ownerContact')
-  validateField('gender')
-  return !errors.petName && !errors.ownerName && !errors.species && !errors.ownerContact && !errors.gender
-}
+  validateField("petName");
+  validateField("ownerName");
+  validateField("species");
+  validateField("ownerContact");
+  validateField("gender");
+  return (
+    !errors.petName &&
+    !errors.ownerName &&
+    !errors.species &&
+    !errors.ownerContact &&
+    !errors.gender
+  );
+};
 
 // Calculate age from birth date
 const calculateAgeFromDate = () => {
   if (formData.birthDate) {
-    const birthDate = new Date(formData.birthDate)
-    const diff = Date.now() - birthDate.getTime()
-    const ageDate = new Date(diff)
-    formData.age = Math.abs(ageDate.getUTCFullYear() - 1970)
+    const birthDate = new Date(formData.birthDate);
+    const diff = Date.now() - birthDate.getTime();
+    const ageDate = new Date(diff);
+    formData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
   }
-}
+};
 
 // Load breeds based on species
 const loadBreeds = async (species) => {
   try {
     const breedData = {
-      Dog: ['Labrador', 'Golden Retriever', 'German Shepherd'],
-      Cat: ['Siamese', 'Persian', 'Maine Coon'],
-      Bird: ['Parrot', 'Canary', 'Cockatiel'],
-      Rabbit: ['Dutch', 'Lionhead', 'Flemish Giant'],
-      Other: []
-    }
-    breedOptions.value = breedData[species] || []
+      Dog: ["Labrador", "Golden Retriever", "German Shepherd"],
+      Cat: ["Siamese", "Persian", "Maine Coon"],
+      Bird: ["Parrot", "Canary", "Cockatiel"],
+      Rabbit: ["Dutch", "Lionhead", "Flemish Giant"],
+      Other: [],
+    };
+    breedOptions.value = breedData[species] || [];
   } catch (error) {
-    console.error('Error loading breeds:', error)
+    console.error("Error loading breeds:", error);
   }
-}
+};
 
 // Notifications
 const showSuccessNotification = () => {
-  showSuccess.value = true
-  setTimeout(() => showSuccess.value = false, 5000)
-}
+  showSuccess.value = true;
+  setTimeout(() => (showSuccess.value = false), 5000);
+};
 
 const showErrorNotification = (message) => {
-  errorMessage.value = message
-  showError.value = true
-  setTimeout(() => showError.value = false, 5000)
-}
+  errorMessage.value = message;
+  showError.value = true;
+  setTimeout(() => (showError.value = false), 5000);
+};
 
-
-
-// Form submission
-// Dans la méthode submitForm, remplacez tout par :
+// Form submission handler (updated to match backend API)
 const submitForm = async () => {
+  if (!validateForm()) {
+    showErrorNotification("Please fill all required fields correctly");
+    return;
+  }
+
+  isSubmitting.value = true;
+
   try {
-    // 1. Créer FormData au lieu de JSON
     const formPayload = new FormData();
-    
-    // Ajouter tous les champs texte
-    formPayload.append('name', formData.petName);
-    formPayload.append('ownername', formData.ownerName);
-    formPayload.append('owner_contact', formData.ownerContact);
-    formPayload.append('species', formData.species);
-    formPayload.append('sex', formData.gender);
-    formPayload.append('age', formData.age || '');
-    formPayload.append('race', formData.breed || '');
-    formPayload.append('medical_issue', formData.medicalIssues || '');
-    formPayload.append('birthday_ownerday', formData.birthDate || '');
 
-    // 2. Ajouter la photo si elle existe
+    // Append all fields (matching backend expectations)
+    formPayload.append("name", formData.petName);
+    formPayload.append("ownername", formData.ownerName);
+    formPayload.append("owner_contact", formData.ownerContact);
+    formPayload.append("species", formData.species);
+    formPayload.append("sex", formData.gender);
+    formPayload.append("age", formData.age || "0");
+    formPayload.append("race", formData.breed || "");
+    formPayload.append("medical_issue", formData.medicalIssues || "");
+    formPayload.append("birthday_ownerday", formData.birthDate || "");
+
+    // Append photo if exists
     if (formData.photo) {
-      formPayload.append('photo', formData.photo); // 'photo' doit matcher avec multer
+      formPayload.append("photo", formData.photo);
     }
 
-    // 3. Envoyer en une seule requête
-    const response = await axios.post(`${API_URL}/add`, formPayload, {
-      // Pas besoin de Content-Type header, axios le gère automatiquement pour FormData
+    const endpoint = isEditMode.value
+      ? `${API_URL}/update/${props.patientToEdit.id}`
+      : `${API_URL}/add`;
+
+    const method = isEditMode.value ? "put" : "post";
+
+    const response = await axios[method](endpoint, formPayload, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
 
-    if (response.data.success) {
-      showSuccessNotification();
-    }
+    showSuccessNotification();
+    emit("save-patient", response.data);
 
+    // Reset form if not in edit mode
+    if (!isEditMode.value) {
+      resetForm();
+    }
   } catch (error) {
-    console.error("Détails de l'erreur:", {
-      URL: error.config?.url,
-      Status: error.response?.status,
-      Data: error.response?.data,
-      Headers: error.config?.headers
-    });
-    showErrorNotification(error.response?.data?.message || "Erreur lors de l'envoi");
+    console.error("Submission error:", error);
+    const serverMessage = error.response?.data?.error || error.message;
+    showErrorNotification(serverMessage || "Failed to save patient");
+  } finally {
+    isSubmitting.value = false;
   }
 };
+
+// Form reset handler
+const resetForm = () => {
+  Object.assign(formData, {
+    petName: "",
+    ownerName: "",
+    ownerContact: "",
+    age: null,
+    gender: "",
+    birthDate: "",
+    species: "",
+    breed: "",
+    medicalIssues: "",
+    photo: null,
+  });
+  previewImage.value = null;
+};
+
+// Cancel edit handler
 const cancelEdit = () => {
-  emit('cancel')
-}
+  emit("cancel");
+  resetForm();
+};
+
+// Load patient data for editing
+const loadPatientData = () => {
+  if (!props.patientToEdit) return;
+
+  const patient = props.patientToEdit;
+  formData.petName = patient.name;
+  formData.ownerName = patient.ownername;
+  formData.ownerContact = patient.owner_contact || "";
+  formData.age = patient.age;
+  formData.gender = patient.sex;
+  formData.species = patient.species;
+  formData.breed = patient.race || "";
+  formData.medicalIssues = patient.medical_issue || "";
+  formData.birthDate = patient.birthday_ownerday || "";
+
+  // Load photo if exists
+  if (patient.photo_path) {
+    previewImage.value = `${API_URL}/uploads/${patient.photo_path}`;
+  }
+};
+
+// Watch for patientToEdit changes
+watch(
+  () => props.patientToEdit,
+  (newVal) => {
+    if (newVal) {
+      loadPatientData();
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped>
@@ -408,7 +522,7 @@ const cancelEdit = () => {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   position: relative;
 }
 
@@ -422,7 +536,7 @@ const cancelEdit = () => {
 .photo-upload {
   width: 100px;
   height: 100px;
-  background-color: #3CB4AC;
+  background-color: #3cb4ac;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -471,15 +585,20 @@ const cancelEdit = () => {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .patient-form {
   background: white;
   padding: 25px;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .form-group {
@@ -512,7 +631,7 @@ const cancelEdit = () => {
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #3CB4AC;
+  border-color: #3cb4ac;
   box-shadow: 0 0 0 2px rgba(60, 180, 172, 0.2);
 }
 
@@ -580,7 +699,7 @@ const cancelEdit = () => {
 }
 
 .submit-btn:hover {
-  background-color: #3CB4AC;
+  background-color: #3cb4ac;
 }
 
 .submit-btn:disabled {
@@ -619,13 +738,24 @@ const cancelEdit = () => {
 }
 
 @keyframes rotate {
-  100% { transform: rotate(360deg); }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes dash {
-  0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
-  50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
-  100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
 }
 
 /* Notifications */
@@ -640,13 +770,13 @@ const cancelEdit = () => {
   align-items: center;
   justify-content: space-between;
   max-width: 300px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   animation: slideIn 0.3s ease-out;
 }
 
 .notification.success {
-  background-color: #4CAF50;
+  background-color: #4caf50;
 }
 
 .notification.error {
@@ -664,8 +794,14 @@ const cancelEdit = () => {
 }
 
 @keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* Responsive adjustments */
@@ -674,11 +810,11 @@ const cancelEdit = () => {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .header-text {
     margin: 20px 0;
   }
-  
+
   .form-row {
     flex-direction: column;
     gap: 0;
@@ -692,7 +828,6 @@ const cancelEdit = () => {
   .form-actions {
     flex-direction: column;
   }
-
 }
 .form-input,
 .form-group input,

@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <NavBar />
-    <router-view /> <!-- C'est ici que les pages s'afficheront -->
-    <Footer /> <!-- Ajout du footer -->
+    <router-view /> <!--main space for displaying the main content of pages -->
+    <Footer />  
   </div>
 </template>
 
